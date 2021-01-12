@@ -12,7 +12,7 @@ import AuthenticationGSS
 from ProcessPool import ProcessPool
 
 #Botのアクセストークンを設定
-TOKEN = 'ここにbotのトークン'
+TOKEN = 'botのトークン'
 
 #接続に必要なオブジェクトを生成
 client = discord.Client()
