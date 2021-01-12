@@ -38,7 +38,7 @@ async def on_message(message):
     #↓の為に全てのコマンドを変数に格納
     MSG_SS_CMD_LIST = ('/command', '/help', '/cup', '/exname', '/party', '/pand', '/move')
     #コマンドの実行が指定されたチャンネルではない場合はメンション付きのメッセージを返して無効にする
-    if message.channel.name != 'go-data-searcher':
+    if message.channel.name != 'チャンネル名':
         if message.content.startswith(MSG_SS_CMD_LIST):
             await message.channel.send(f"{message.author.mention} \r\n{'このチャンネルではコマンドの実行は不可です。一般チャンネルでコマンドの実行をしてください。'}")
             return
