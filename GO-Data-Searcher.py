@@ -36,7 +36,7 @@ async def on_message(message):
         return
 
     #↓の為に全てのコマンドを変数に格納
-    MSG_SS_CMD_LIST = ('/command', '/help', '/cup', '/exname', '/party', '/pand', '/move')
+    MSG_SS_CMD_LIST = ('/command', '/help', '/cup', '/exname', '/party', '/pand')
     #コマンドの実行が指定されたチャンネルではない場合はメンション付きのメッセージを返して無効にする
     if message.channel.name != 'チャンネル名':
         if message.content.startswith(MSG_SS_CMD_LIST):
@@ -69,7 +69,7 @@ async def on_message(message):
     #「/cup」と発言したら内容が返る処理
     if message.content.startswith('/cup'):
         #embedで埋め込みメッセージに変換
-        embed_cup = discord.Embed(title = 'カップ名リスト', description = '/pc\r\n/ハロウィン\r\n/ひこう\r\n/リトル\r\n/カントー\r\n/ホリデー', color = discord.Color.teal())
+        embed_cup = discord.Embed(title = 'カップ名リスト', description = '/pc\r\n/ハロウィン\r\n/ひこう\r\n/リトル\r\n/カントー\r\n/ホリデー\r\n/ラブラブ', color = discord.Color.teal())
         await message.channel.send(embed = embed_cup)
 
 
@@ -87,10 +87,12 @@ async def on_message(message):
     #「/exname」と発言したら内容が返る処理
     if message.content.startswith('/exname'):
         #I11～Jの値のあるセルまでの値を受け取ってDataFrameに変換してembedで埋め込みメッセージに変換
-        embed_exname1 = discord.Embed(title = '特殊ポケモン名リスト　1/2', description = convert_ws_to_df('I11:J61'), color = discord.Color.teal())
-        embed_exname2 = discord.Embed(title = '特殊ポケモン名リスト　2/2', description = convert_ws_to_df('I62:J'), color = discord.Color.teal())
+        embed_exname1 = discord.Embed(title = '特殊ポケモン名リスト　1/3', description = convert_ws_to_df('I11:J61'), color = discord.Color.teal())
+        embed_exname2 = discord.Embed(title = '特殊ポケモン名リスト　2/3', description = convert_ws_to_df('I62:J112'), color = discord.Color.teal())
+        embed_exname3 = discord.Embed(title = '特殊ポケモン名リスト　3/3', description = convert_ws_to_df('I113:J'), color = discord.Color.teal())
         await message.channel.send(embed = embed_exname1)
         await message.channel.send(embed = embed_exname2)
+        await message.channel.send(embed = embed_exname3)
 
 
     #各リーグ名を変数に格納
@@ -172,11 +174,11 @@ async def on_message(message):
 
 
     #各カップ名を変数に格納
-    CUP_LIST = ('/ハロウィン', '/ひこう', '/リトル', '/カントー', '/ホリデー')
-    #セルG2～G29に値を入力するためのリストを用意(このリストがセルG2～G29と同義)
-    conditions_cells = [''] * 28
-    #セルG2～G29を取得
-    wsc_conditions = worksheet.range(2, 7, 29, 7)
+    CUP_LIST = ('/ハロウィン', '/ひこう', '/リトル', '/カントー', '/ホリデー', '/ラブラブ')
+    #セルG2～G30に値を入力するためのリストを用意(このリストがセルG2～G30と同義)
+    conditions_cells = [''] * 29
+    #セルG2～G30を取得
+    wsc_conditions = worksheet.range(2, 7, 30, 7)
     #「/pand」と発言したら発言をGSSに入出力する処理
     if message.content.startswith('/pand'):
         #メッセージを受け取った時にもし処理の状態がロックされていないならロックする
@@ -248,21 +250,24 @@ async def on_message(message):
                 conditions_cells[6] = 'こおり'
                 conditions_cells[7] = 'ひこう'
                 conditions_cells[8] = 'ゴースト'
+            #ラブラブカップが指定された場合にセルG30に'ラブラブ'を入力する処理
+            if '/ラブラブ' in message.content:
+                conditions_cells[28] = 'ラブラブ'
 
             #区切られた単語をセルB3を飛ばしてB2とB4～最大B8までに入力
             #リーグ名をセルB2に、ポケモン名1～最大5までをセルB4～最大B8までに格納(入力されたメッセージによって可変)
             wsc1 = list(map(input_cells, zip(wsc1, search_pokemon[1:])))
-            #セルG2～G29に指定された条件を格納して入力
+            #セルG2～G30に指定された条件を格納して入力
             wsc_conditions = list(map(input_cells, zip(wsc_conditions, conditions_cells)))
-            #セルB2とB4～最大B8までとG2～G29の値を更新
+            #セルB2とB4～最大B8までとG2～G30の値を更新
             worksheet.update_cells(wsc1 + wsc_conditions)
 
             #B2～D8までの検索値を受け取ってDataFrameに変換してembedで埋め込みメッセージに変換
             embed_party_searchvalue = discord.Embed(title = '検索値', description = convert_ws_to_df('B2:D8'), color = discord.Color.teal())
             #条件指定された場合の処理
             try:
-                #G2～G29までの値を受け取ってDataFrameに変換してembed_party_searchvalueにフィールドとして追加
-                embed_party_searchvalue.add_field(name = '条件', value = convert_ws_to_df('G2:G29'), inline = False)
+                #G2～G30までの値を受け取ってDataFrameに変換してembed_party_searchvalueにフィールドとして追加
+                embed_party_searchvalue.add_field(name = '条件', value = convert_ws_to_df('G2:G30'), inline = False)
             #条件指定されなかった場合はこの処理をパスする
             except KeyError:
                 pass
@@ -284,13 +289,13 @@ async def on_message(message):
             except KeyError:
                 pass
         finally:
-            #セルB2,B4～B8,G2～G29の値を消す(リセットのため)
+            #セルB2,B4～B8,G2～G30の値を消す(リセットのため)
             wsc1 = list(map(input_cells, zip(wsc1, RESET_LEAGUE_AND_POKENAME)))
-            #セルG2～G29の値に''を格納
-            conditions_cells = [''] * 28
+            #セルG2～G30の値に''を格納
+            conditions_cells = [''] * 29
             wsc_conditions = list(map(input_cells, zip(wsc_conditions, conditions_cells)))
 
-            #セルB2,B4～B8,G2～G29に入力された値を消す＆更新
+            #セルB2,B4～B8,G2～G30に入力された値を消す＆更新
             worksheet.update_cells(wsc1 + wsc_conditions)
             #ロックを解除する
             ProcessPool.unlock()
