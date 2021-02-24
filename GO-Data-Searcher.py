@@ -262,9 +262,9 @@ async def on_message(message):
             #区切られた単語をセルB3を飛ばしてB2とB4～最大B8までに入力
             #リーグ名をセルB2に、ポケモン名1～最大5までをセルB4～最大B8までに格納(入力されたメッセージによって可変)
             wsc1 = list(map(input_cells, zip(wsc1, search_pokemon[1:])))
-            #セルG2～G30に指定された条件を格納して入力
+            #セルG2～G47に指定された条件を格納して入力
             wsc_conditions = list(map(input_cells, zip(wsc_conditions, conditions_cells)))
-            #セルB2とB4～最大B8までとG2～G30の値を更新
+            #セルB2とB4～最大B8までとG2～G47の値を更新
             worksheet.update_cells(wsc1 + wsc_conditions)
 
             #B2～D8までの検索値を受け取ってDataFrameに変換してembedで埋め込みメッセージに変換
