@@ -69,7 +69,7 @@ async def on_message(message):
     #「/cup」と発言したら内容が返る処理
     if message.content.startswith('/cup'):
         #embedで埋め込みメッセージに変換
-        embed_cup = discord.Embed(title = 'カップ名リスト', description = '/pc\r\n/ハロウィン\r\n/ひこう\r\n/リトル\r\n/カントー\r\n/ホリデー\r\n/ラブラブ', color = discord.Color.teal())
+        embed_cup = discord.Embed(title = 'カップ名リスト', description = '/pc\r\n/ハロウィン\r\n/ひこう\r\n/リトル\r\n/カントー\r\n/ホリデー\r\n/ラブラブ\r\n/レトロ', color = discord.Color.teal())
         await message.channel.send(embed = embed_cup)
 
 
@@ -174,11 +174,11 @@ async def on_message(message):
 
 
     #各カップ名を変数に格納
-    CUP_LIST = ('/ハロウィン', '/ひこう', '/リトル', '/カントー', '/ホリデー', '/ラブラブ')
-    #セルG2～G30に値を入力するためのリストを用意(このリストがセルG2～G30と同義)
-    conditions_cells = [''] * 29
-    #セルG2～G30を取得
-    wsc_conditions = worksheet.range(2, 7, 30, 7)
+    CUP_LIST = ('/ハロウィン', '/ひこう', '/リトル', '/カントー', '/ホリデー', '/ラブラブ', '/レトロ')
+    #セルG2～G47に値を入力するためのリストを用意(このリストがセルG2～G47と同義)
+    conditions_cells = [''] * 46
+    #セルG2～G47を取得
+    wsc_conditions = worksheet.range(2, 7, 47, 7)
     #「/pand」と発言したら発言をGSSに入出力する処理
     if message.content.startswith('/pand'):
         #メッセージを受け取った時にもし処理の状態がロックされていないならロックする
@@ -253,6 +253,11 @@ async def on_message(message):
             #ラブラブカップが指定された場合にセルG30に'ラブラブ'を入力する処理
             if '/ラブラブ' in message.content:
                 conditions_cells[28] = 'ラブラブ'
+            #レトロカップが指定された場合にセルG31～G33に'あく','はがね','フェアリー'を入力する処理
+            if '/レトロ' in message.content:
+                conditions_cells[29] = 'あく'
+                conditions_cells[30] = 'はがね'
+                conditions_cells[31] = 'フェアリー'
 
             #区切られた単語をセルB3を飛ばしてB2とB4～最大B8までに入力
             #リーグ名をセルB2に、ポケモン名1～最大5までをセルB4～最大B8までに格納(入力されたメッセージによって可変)
@@ -266,8 +271,8 @@ async def on_message(message):
             embed_party_searchvalue = discord.Embed(title = '検索値', description = convert_ws_to_df('B2:D8'), color = discord.Color.teal())
             #条件指定された場合の処理
             try:
-                #G2～G30までの値を受け取ってDataFrameに変換してembed_party_searchvalueにフィールドとして追加
-                embed_party_searchvalue.add_field(name = '条件', value = convert_ws_to_df('G2:G30'), inline = False)
+                #G2～G47までの値を受け取ってDataFrameに変換してembed_party_searchvalueにフィールドとして追加
+                embed_party_searchvalue.add_field(name = '条件', value = convert_ws_to_df('G2:G47'), inline = False)
             #条件指定されなかった場合はこの処理をパスする
             except KeyError:
                 pass
@@ -289,13 +294,13 @@ async def on_message(message):
             except KeyError:
                 pass
         finally:
-            #セルB2,B4～B8,G2～G30の値を消す(リセットのため)
+            #セルB2,B4～B8,G2～G47の値を消す(リセットのため)
             wsc1 = list(map(input_cells, zip(wsc1, RESET_LEAGUE_AND_POKENAME)))
-            #セルG2～G30の値に''を格納
-            conditions_cells = [''] * 29
+            #セルG2～G47の値に''を格納
+            conditions_cells = [''] * 46
             wsc_conditions = list(map(input_cells, zip(wsc_conditions, conditions_cells)))
 
-            #セルB2,B4～B8,G2～G30に入力された値を消す＆更新
+            #セルB2,B4～B8,G2～G47に入力された値を消す＆更新
             worksheet.update_cells(wsc1 + wsc_conditions)
             #ロックを解除する
             ProcessPool.unlock()
