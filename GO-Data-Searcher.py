@@ -69,7 +69,7 @@ async def on_message(message):
     #「/cup」と発言したら内容が返る処理
     if message.content.startswith('/cup'):
         #embedで埋め込みメッセージに変換
-        embed_cup = discord.Embed(title = 'カップ名リスト', description = '/pc\r\n/ハロウィン\r\n/ひこう\r\n/リトル\r\n/カントー\r\n/ホリデー\r\n/ラブラブ\r\n/レトロ', color = discord.Color.teal())
+        embed_cup = discord.Embed(title = 'カップ名リスト', description = '/pc\r\n/ハロウィン\r\n/ひこう\r\n/リトル\r\n/カントー\r\n/ホリデー\r\n/ラブラブ\r\n/レトロ\r\n/エレメント', color = discord.Color.teal())
         await message.channel.send(embed = embed_cup)
 
 
@@ -174,7 +174,7 @@ async def on_message(message):
 
 
     #各カップ名を変数に格納
-    CUP_LIST = ('/ハロウィン', '/ひこう', '/リトル', '/カントー', '/ホリデー', '/ラブラブ', '/レトロ')
+    CUP_LIST = ('/ハロウィン', '/ひこう', '/リトル', '/カントー', '/ホリデー', '/ラブラブ', '/レトロ', '/エレメント')
     #セルG2～G47に値を入力するためのリストを用意(このリストがセルG2～G47と同義)
     conditions_cells = [''] * 46
     #セルG2～G47を取得
@@ -258,6 +258,12 @@ async def on_message(message):
                 conditions_cells[29] = 'あく'
                 conditions_cells[30] = 'はがね'
                 conditions_cells[31] = 'フェアリー'
+            #エレメントカップが指定された場合にセルG5～G7に'ほのお','みず','くさ'、セルG22に'リトル'を入力する処理
+            if '/エレメント' in message.content:
+                conditions_cells[3] = 'ほのお'
+                conditions_cells[4] = 'みず'
+                conditions_cells[5] = 'くさ'
+                conditions_cells[20] = 'リトル'
 
             #区切られた単語をセルB3を飛ばしてB2とB4～最大B8までに入力
             #リーグ名をセルB2に、ポケモン名1～最大5までをセルB4～最大B8までに格納(入力されたメッセージによって可変)
